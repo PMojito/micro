@@ -5,6 +5,7 @@ import (
 	"encoding/gob"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 	"path/filepath"
 	"sort"
@@ -42,6 +43,7 @@ func CleanConfig() {
 	}
 
 	fmt.Println("Cleaning default settings")
+	log.Println("Call to function CleanConfig().  Cleaning up 'settings.json'")
 	config.WriteSettings(filepath.Join(config.ConfigDir, "settings.json"))
 
 	// detect unused options

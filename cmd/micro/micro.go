@@ -242,6 +242,7 @@ func main() {
 	err = config.ReadSettings()
 	if err != nil {
 		screen.TermMessage(err)
+		os.Exit(1)  // BPO: Exit immediately if 'settings.json' is broken.
 	}
 	err = config.InitGlobalSettings()
 	if err != nil {

@@ -9,6 +9,7 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
+	"runtime"
 	"strconv"
 	"strings"
 
@@ -157,18 +158,31 @@ func InitLocalSettings(settings map[string]interface{}, path string) error {
 // WriteSettings writes the settings to the specified filename as JSON
 func WriteSettings(filename string) error {
 	var err error
+
+	_, file, no, ok := runtime.Caller(1)
+    if ok {
+        log.Printf("WriteSettings() called from %s#%d\n", file, no)
+    }
+
 	if _, e := os.Stat(ConfigDir); e == nil {
 		defaults := DefaultGlobalSettings()
 
-		// remove any options froms parsedSettings that have since been marked as default
+
+		//  BPO : I really disklike this code.  It modifies the user's 'settings.json' without asking permission, or even notifying them.
+		//  While user settings may be redundant -today-, they might not be tomorrow if the Maintainers change them.
+		// 
+		// remove any options from parsedSettings that have since been marked as default
+		/*
 		for k, v := range parsedSettings {
 			if !strings.HasPrefix(reflect.TypeOf(v).String(), "map") {
-				cur, okcur := GlobalSettings[k]
-				if def, ok := defaults[k]; ok && okcur && reflect.DeepEqual(cur, def) {
+				glob_value, okcur := GlobalSettings[k]
+				if default_value, ok := defaults[k]; ok && okcur && reflect.DeepEqual(glob_value, default_value) {
+					log.Printf("Current setting '%s':'%v'. Removing Default value '%v' because it already has a Global Default '%v'", k, v, default_value, glob_value)
 					delete(parsedSettings, k)
 				}
 			}
 		}
+		*/
 
 		// add any options to parsedSettings that have since been marked as non-default
 		for k, v := range GlobalSettings {
@@ -213,6 +227,7 @@ func RegisterCommonOptionPlug(pl string, name string, defaultvalue interface{}) 
 	if v, ok := GlobalSettings[name]; !ok {
 		defaultCommonSettings[name] = defaultvalue
 		GlobalSettings[name] = defaultvalue
+		log.Println("Call to function RegisterCommonOptionPlug()")  // BPO
 		err := WriteSettings(filepath.Join(ConfigDir, "settings.json"))
 		if err != nil {
 			return errors.New("Error writing settings.json file: " + err.Error())
@@ -233,6 +248,7 @@ func RegisterGlobalOption(name string, defaultvalue interface{}) error {
 	if v, ok := GlobalSettings[name]; !ok {
 		DefaultGlobalOnlySettings[name] = defaultvalue
 		GlobalSettings[name] = defaultvalue
+		log.Println("Call to function RegisterGlobalOption()")  // BPO
 		err := WriteSettings(filepath.Join(ConfigDir, "settings.json"))
 		if err != nil {
 			return errors.New("Error writing settings.json file: " + err.Error())

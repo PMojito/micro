@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"log"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -338,6 +339,7 @@ func ReloadConfig() {
 	err := config.ReadSettings()
 	if err != nil {
 		screen.TermMessage(err)
+		os.Exit(1)  // BPO: Exit immediately if 'settings.json' is broken.
 	}
 	err = config.InitGlobalSettings()
 	if err != nil {
@@ -529,6 +531,7 @@ func SetGlobalOptionNative(option string, nativeValue interface{}) error {
 		b.SetOptionNative(option, nativeValue)
 	}
 
+	// BPO: Not sure the need to constantly Write Settings
 	return config.WriteSettings(filepath.Join(config.ConfigDir, "settings.json"))
 }
 
@@ -553,6 +556,7 @@ func (h *BufPane) ResetCmd(args []string) {
 	}
 
 	option := args[0]
+	log.Println("Request to reset command (func ResetCmd): ", option)
 
 	defaultGlobals := config.DefaultGlobalSettings()
 	defaultLocals := config.DefaultCommonSettings()
@@ -578,6 +582,7 @@ func (h *BufPane) SetCmd(args []string) {
 	option := args[0]
 	value := args[1]
 
+	log.Println("Setting option '",option,"' to value '",value,"'")
 	err := SetGlobalOption(option, value)
 	if err == config.ErrInvalidOption {
 		err := h.Buf.SetOption(option, value)

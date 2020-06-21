@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"log"
 	"os"
 	"path"
 	"path/filepath"
@@ -259,6 +260,8 @@ func NewBuffer(r io.Reader, size int64, path string, startcursor Loc, btype BufT
 	absPath, _ := filepath.Abs(path)
 
 	b := new(Buffer)
+	// BPO: Log what file we are working with.
+	log.Println("New buffer for path: ", absPath)
 
 	found := false
 	if len(path) > 0 {

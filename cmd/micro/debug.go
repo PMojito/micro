@@ -18,14 +18,18 @@ func (NullWriter) Write(data []byte) (n int, err error) {
 // InitLog sets up the debug log system for micro if it has been enabled by compile-time variables
 func InitLog() {
 	if util.Debug == "ON" {
-		f, err := os.OpenFile("log.txt", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0666)
+		// BPO: Removing O_TRUNC; I want a persistent log.
+		// BPO: Adding option to APPEND
+		f, err := os.OpenFile("log.txt", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 		if err != nil {
 			log.Fatalf("error opening file: %v", err)
 		}
 
 		log.SetOutput(f)
-		log.Println("Micro started")
-	} else {
+		// BPO:  Printing current date and time.
+		log.Println("Micro started with -debug option.")
+
+		} else {
 		log.SetOutput(NullWriter{})
 	}
 }

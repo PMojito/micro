@@ -1,0 +1,13 @@
+{
+  "autoclose" : false,
+  "autoindent" : false,
+  "ftoptions": true,
+  "*.py": {
+    "indentchar": "|",
+    "tabstospaces": false,
+    "tabsize": 4,
+  },
+  "tabmovement": false,
+  "tabsize": 4,
+  "tabstospaces": true,
+}

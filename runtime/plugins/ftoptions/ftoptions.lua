@@ -1,3 +1,5 @@
+-- Brian: Removing Python defaults.
+
 VERSION = "1.0.0"
 
 function onBufferOpen(b)
@@ -7,9 +9,6 @@ function onBufferOpen(b)
     ft == "makefile" then
         b:SetOption("tabstospaces", "off")
     elseif ft == "fish" or
-           ft == "python" or
-           ft == "python2" or
-           ft == "python3" or
            ft == "yaml" or
            ft == "nim" then
         b:SetOption("tabstospaces", "on")
