@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -126,6 +127,8 @@ func InitLocalSettings(settings map[string]interface{}, path string) error {
 						}
 						settings[k1] = v1
 					}
+					// BPO: Log that we're using custom settings for a file type.
+					log.Println("For path", path, " using ft:", k[3:], " from 'settings.json'")
 				}
 			} else {
 				g, err := glob.Compile(k)
@@ -135,6 +138,8 @@ func InitLocalSettings(settings map[string]interface{}, path string) error {
 				}
 
 				if g.MatchString(path) {
+					// BPO: Log that we're using custom settings for a file type.
+					log.Println("For path '", path, "', matched glob k=", k, " from 'settings.json'")
 					for k1, v1 := range v.(map[string]interface{}) {
 						if _, ok := settings[k1]; ok && !verifySetting(k1, reflect.TypeOf(v1), reflect.TypeOf(settings[k1])) {
 							parseError = errors.New(fmt.Sprintf("Error: setting '%s' has incorrect type (%s), using default value: %v (%s)", k, reflect.TypeOf(v1), settings[k1], reflect.TypeOf(settings[k1])))
