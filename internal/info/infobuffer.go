@@ -54,7 +54,7 @@ func (i *InfoBuf) Close() {
 func (i *InfoBuf) Message(msg ...interface{}) {
 	// only display a new message if there isn't an active prompt
 	// this is to prevent overwriting an existing prompt to the user
-	if i.HasPrompt == false {
+	if !i.HasPrompt {
 		displayMessage := fmt.Sprint(msg...)
 		// if there is no active prompt then style and display the message as normal
 		i.Msg = displayMessage
@@ -78,7 +78,7 @@ func (i *InfoBuf) ClearGutter() {
 func (i *InfoBuf) Error(msg ...interface{}) {
 	// only display a new message if there isn't an active prompt
 	// this is to prevent overwriting an existing prompt to the user
-	if i.HasPrompt == false {
+	if !i.HasPrompt {
 		// if there is no active prompt then style and display the message as normal
 		i.Msg = fmt.Sprint(msg...)
 		i.HasMessage, i.HasError = false, true
@@ -145,6 +145,14 @@ func (i *InfoBuf) DonePrompt(canceled bool) {
 				i.PromptCallback(resp, false)
 				h := i.History[i.PromptType]
 				h[len(h)-1] = resp
+
+				// avoid duplicates
+				for j := len(h) - 2; j >= 0; j-- {
+					if h[j] == h[len(h)-1] {
+						i.History[i.PromptType] = append(h[:j], h[j+1:]...)
+						break
+					}
+				}
 			}
 			// i.PromptCallback = nil
 		}
