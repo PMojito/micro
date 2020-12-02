@@ -161,7 +161,7 @@ Here are the available options:
 
 * `ignorecase`: perform case-insensitive searches.
 
-	default value: `false`
+	default value: `true`
 
 * `indentchar`: sets the indentation character.
 
@@ -237,8 +237,7 @@ Here are the available options:
    By default, this option points to the official plugin channel hosted on GitHub
    at https://github.com/micro-editor/plugin-channel.
 
-    default value: `https://raw.githubusercontent.com/micro-editor/plugin-channel
-                    /master/channel.json`
+    default value: `https://raw.githubusercontent.com/micro-editor/plugin-channel/master/channel.json`
 
 * `pluginrepos`: a list of links to plugin repositories.
 
