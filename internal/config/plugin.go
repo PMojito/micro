@@ -27,6 +27,12 @@ func LoadAllPlugins() error {
 // returns an error if any of the plugins had an error
 func RunPluginFn(fn string, args ...lua.LValue) error {
 	var reterr error
+
+	// Brian: This particular Lua call trashes our Buffer settings; don't let it execute!
+	if fn == "onBufferOpen" {
+		log.Println("Call to RunPluginFn(onBufferOpen), which poisons our settings.json")
+		return reterr
+	}
 	for _, p := range Plugins {
 		if !p.IsEnabled() {
 			continue

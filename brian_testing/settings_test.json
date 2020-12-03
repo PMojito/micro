@@ -5,9 +5,9 @@
   "*.py": {
     "indentchar": "|",
     "tabstospaces": false,
-    "tabsize": 4,
+    "tabsize": 4
   },
   "tabmovement": false,
   "tabsize": 4,
-  "tabstospaces": true,
+  "tabstospaces": true
 }

@@ -261,7 +261,7 @@ func NewBuffer(r io.Reader, size int64, path string, startcursor Loc, btype BufT
 
 	b := new(Buffer)
 	// BPO: Log what file we are working with.
-	log.Println("New buffer for path: ", absPath)
+	log.Println("DEBUG: New buffer for path: ", absPath)
 
 	found := false
 	if len(path) > 0 {
@@ -367,10 +367,16 @@ func NewBuffer(r io.Reader, size int64, path string, startcursor Loc, btype BufT
 		}
 	}
 
+	log.Println("Before RunPluginFn(onBufferOpen): TabsToSpaces = ", b.Settings["tabstospaces"].(bool))
+
+
 	err := config.RunPluginFn("onBufferOpen", luar.New(ulua.L, b))
 	if err != nil {
 		screen.TermMessage(err)
 	}
+
+
+	log.Println("After RunPluginFn(onBufferOpen): TabsToSpaces = ", b.Settings["tabstospaces"].(bool))
 
 	OpenBuffers = append(OpenBuffers, b)
 
